@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - FF Tournament</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <style>
+        :root {
+            --admin-primary: #2c3e50;
+            --admin-secondary: #34495e;
+            --admin-accent: #3498db;
+            --admin-success: #27ae60;
+            --admin-warning: #f39c12;
+            --admin-danger: #e74c3c;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+            color: white;
+            padding: 12px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar {
+            background: white;
+            min-height: calc(100vh - 70px);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 220px;
+            overflow-y: auto;
+        }
+        
+        .main-content {
+            margin-left: 220px;
+            padding: 20px;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .sidebar-logo {
+            padding: 20px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 15px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-menu a:hover {
+            background: #f8f9fa;
+            color: var(--admin-accent);
+            border-left: 3px solid var(--admin-accent);
+        }
+        
+        .sidebar-menu a.active {
+            background: #e3f2fd;
+            color: var(--admin-accent);
+            border-left: 3px solid var(--admin-accent);
+        }
+        
+        .sidebar-menu i {
+            width: 20px;
+            text-align: center;
+            margin-right: 8px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--admin-accent);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            float: left;
+            margin-right: 15px;
+        }
+        
+        .icon-users { background: #e3f2fd; color: #2196f3; }
+        .icon-tournament { background: #e8f5e9; color: #4caf50; }
+        .icon-payment { background: #fff3e0; color: #ff9800; }
+        .icon-profit { background: #f3e5f5; color: #9c27b0; }
+        
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        
+        .btn-admin {
+            background: var(--admin-accent);
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .btn-admin:hover {
+            background: #2980b9;
+            color: white;
+        }
+        
+        .btn-success { background: var(--admin-success); }
+        .btn-warning { background: var(--admin-warning); }
+        .btn-danger { background: var(--admin-danger); }
+        
+        .status-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+        .status-live { background: #d1ecf1; color: #0c5460; }
+        .status-upcoming { background: #d6d8d9; color: #383d41; }
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-joined { background: #cce5ff; color: #004085; }
+        
+        .modal-header-admin {
+            background: linear-gradient(135deg, var(--admin-primary), var(--admin-secondary));
+            color: white;
+        }
+        
+        .notification-badge {
+            background: var(--admin-danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 5px;
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top: 3px solid var(--admin-accent);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .payment-method-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-right: 5px;
+        }
+        
+        .bkash { background: #e2136e; color: white; }
+        .nagad { background: #f8a01c; color: #000; }
+        .rocket { background: #5d2d8d; color: white; }
+        .upay { background: #00a859; color: white; }
+        
+        .tournament-type-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 5px;
+        }
+        
+        .type-solo { background: #3498db; color: white; }
+        .type-duo { background: #9b59b6; color: white; }
+        .type-squad { background: #e74c3c; color: white; }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                min-height: auto;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+    
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCN_MH6u2Bpo3bxfDC_dhC19U67LP8ZS_E",
+            authDomain: "free-fire-22cac.firebaseapp.com",
+            databaseURL: "https://free-fire-22cac-default-rtdb.firebaseio.com",
+            projectId: "free-fire-22cac",
+            storageBucket: "free-fire-22cac.firebasestorage.app",
+            messagingSenderId: "554987602894",
+            appId: "1:554987602894:web:51548645a15c0d1e8d619f",
+            measurementId: "G-W2QYY1CQ8D"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+    </script>
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-0"><i class="fas fa-user-shield"></i> Admin Panel</h5>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                    <div class="dropdown me-3">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge" id="notificationCount">0</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" id="notificationsList">
+                            <li><h6 class="dropdown-header">Notifications</h6></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> Admin
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="user-panel.html">
+                                <i class="fas fa-home"></i> User Panel
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="adminLogout()">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <h6>FF <span class="text-danger">Tournament</span></h6>
+            <small>Admin Dashboard</small>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#" onclick="showSection('dashboardSection')" class="active">
+                    <i class="fas fa-dashboard"></i> Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showSection('usersSection')">
+                    <i class="fas fa-users"></i> Users
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showSection('tournamentsSection')">
+                    <i class="fas fa-trophy"></i> Tournaments
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showSection('withdrawalsSection')">
+                    <i class="fas fa-money-bill-wave"></i> Withdrawals
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showSection('rechargesSection')">
+                    <i class="fas fa-wallet"></i> Recharges
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showSection('noticesSection')">
+                    <i class="fas fa-bullhorn"></i> Notices
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showSection('messagesSection')">
+                    <i class="fas fa-envelope"></i> Messages
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="showSection('settingsSection')">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </li>
+        </ul>
+        
+        <div class="sidebar-footer text-center">
+            <small>&copy; 2023 FF Tournament</small>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboardSection">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalUsers">0</h3>
+                            <small>Total Users</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-tournament">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="activeTournaments">0</h3>
+                            <small>Active Tournaments</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-payment">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingWithdrawals">0</h3>
+                            <small>Pending Withdrawals</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-profit">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingRecharges">0</h3>
+                            <small>Pending Recharges</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="table-container">
+                        <h6>Recent Activity</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>User</th>
+                                        <th>Action</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentActivityTable">
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            <div class="loading-spinner"></div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="usersSection" class="d-none">
+            <div class="table-container">
+                <h6>Users Management</h6>
+                <div class="mb-3">
+                    <input type="text" class="form-control form-control-sm" id="searchUsers" placeholder="Search users...">
+                </div>
+                <div id="usersTable">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tournaments Section -->
+        <section id="tournamentsSection" class="d-none">
+            <div class="table-container">
+                <h6>Tournaments Management</h6>
+                <div class="btn-group btn-group-sm mb-3">
+                    <button class="btn btn-outline-primary active" data-filter="all">All</button>
+                    <button class="btn btn-outline-primary" data-filter="upcoming">Upcoming</button>
+                    <button class="btn btn-outline-primary" data-filter="live">Live</button>
+                    <button class="btn btn-outline-primary" data-filter="completed">Completed</button>
+                </div>
+                <div id="tournamentsTable">
+                    <div class="loading-spinner"></div>
+                </div>
+                <button class="btn btn-admin mt-2" onclick="createNewTournament()">Create New Tournament</button>
+            </div>
+        </section>
+
+        <!-- Withdrawals Section -->
+        <section id="withdrawalsSection" class="d-none">
+            <div class="table-container">
+                <h6>Withdrawal Requests</h6>
+                <div id="withdrawalsTable">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recharges Section -->
+        <section id="rechargesSection" class="d-none">
+            <div class="table-container">
+                <h6>Recharge Requests</h6>
+                <div id="rechargesTable">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notices Section -->
+        <section id="noticesSection" class="d-none">
+            <div class="table-container">
+                <h6>Notices Management</h6>
+                <div id="noticesTable">
+                    <div class="loading-spinner"></div>
+                </div>
+                <button class="btn btn-admin mt-2" onclick="addNewNotice()">Add New Notice</button>
+            </div>
+        </section>
+
+        <!-- Messages Section -->
+        <section id="messagesSection" class="d-none">
+            <div class="table-container">
+                <h6>User Messages</h6>
+                <div id="messagesTable">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settingsSection" class="d-none">
+            <div class="table-container">
+                <h6>System Settings</h6>
+                <form id="settingsForm">
+                    <div class="mb-3">
+                        <label class="form-label">Admin Password</label>
+                        <input type="password" class="form-control" id="newAdminPassword" placeholder="Leave blank to keep current">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Default Entry Fee (৳)</label>
+                        <input type="number" class="form-control" id="defaultEntryFee" value="50">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kill Reward Percent (%)</label>
+                        <input type="number" class="form-control" id="killRewardPercent" value="20">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Minimum Withdrawal (৳)</label>
+                        <input type="number" class="form-control" id="minWithdrawal" value="200">
+                    </div>
+                    <button type="button" class="btn btn-admin" onclick="saveSettings()">Save Settings</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Custom Modal -->
+    <div class="modal fade" id="customModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header modal-header-admin">
+                    <h5 class="modal-title" id="customModalTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="customModalBody"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast" role="alert">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="successToastBody"></div>
+        </div>
+        
+        <div id="errorToast" class="toast" role="alert">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto">Error</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="errorToastBody"></div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Admin Script -->
+    <script src="admin-script.js"></script>
+</body>
+</html>
