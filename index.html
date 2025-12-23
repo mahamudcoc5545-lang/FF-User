@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FF Tournament - Player Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header-marquee">
+        <marquee behavior="scroll" direction="left" id="noticeMarquee">
+            🎮 Welcome to FF Tournament Platform! Join Free Fire Tournaments & Win Cash Prizes!
+        </marquee>
+    </div>
+
+    <div class="text-center my-4">
+        <a href="https://drive.google.com/file/d/1f_5I9wwnEBq_577NLcp-RCRvs67GcgYH/view?usp=drivesdk"
+           class="rainbow-glitter-button" target="_blank">
+            Download the app
+        </a>
+    </div>
+
+    <nav class="navbar navbar-expand-lg main-nav sticky-top">
+        <div class="container">
+            <a class="navbar-brand nav-brand" href="#">
+                <i class="fas fa-fire"></i> FF<span>Tournament</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon text-white"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#" onclick="showSection('home')"><i class="fas fa-home"></i> Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('tournaments')"><i class="fas fa-trophy"></i> Tournaments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('history')"><i class="fas fa-history"></i> History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</a></li>
+                </ul><!-- Theme Toggle Button (FIXED) -->
+<div class="me-3">
+    <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+</div>
+                <div class="d-flex align-items-center ms-lg-3 mt-2 mt-lg-0" id="userControls">
+                    <div class="balance-card me-3 d-none" id="userBalanceCard">
+                        <i class="fas fa-wallet text-warning"></i>
+                        <span id="userBalance">0</span> ৳
+                    </div>
+                    <div class="dropdown me-3 d-none" id="loggedInUser">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span class="notification-badge" id="userNotificationCount">0</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="showSection('profile')">Profile</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showSection('history')">History</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="#" onclick="logout()">Logout</a></li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-ff btn-sm" id="loginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="fas fa-user"></i> Login
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4" id="mainContent">
+        <!-- Home Section -->
+        <section id="homeSection">
+            <div class="row" id="guestView">
+                <div class="col-12 text-center py-4">
+                    <h1 class="display-5 mb-3">🎮 Free Fire Tournament Platform</h1>
+                    <p class="lead mb-4">Join Custom Room Tournaments & Win Cash Prizes in BDT!</p>
+                    <div class="row justify-content-center mt-4">
+                        <div class="col-md-4 mb-3">
+                            <div class="balance-card text-center">
+                                <i class="fas fa-trophy fa-2x text-warning mb-2"></i>
+                                <h5>Win Prizes</h5>
+                                <p class="small">Compete and win exciting cash prizes in BDT</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="balance-card text-center">
+                                <i class="fas fa-bolt fa-2x text-danger mb-2"></i>
+                                <h5>Kill Rewards</h5>
+                                <p class="small">Get cashback in BDT for each kill</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="balance-card text-center">
+                                <i class="fas fa-shield-alt fa-2x text-success mb-2"></i>
+                                <h5>Secure Platform</h5>
+                                <p class="small">Safe and secure transactions</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-ff btn-lg mt-3" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="fas fa-sign-in-alt"></i> Login to Join
+                    </button>
+                </div>
+            </div>
+
+            <div class="row d-none" id="userDashboard">
+                <div class="col-lg-3 col-md-4">
+                    <div class="balance-card text-center" id="userProfileCard">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div class="balance-card mt-3">
+                        <h6><i class="fas fa-bolt"></i> Quick Actions</h6>
+                        <button class="btn btn-ff btn-sm w-100 mt-2" data-bs-toggle="modal" data-bs-target="#rechargeModal">
+                            <i class="fas fa-plus-circle"></i> Add Balance
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm w-100 mt-2" onclick="showSection('tournaments')">
+                            <i class="fas fa-gamepad"></i> Join Tournament
+                        </button>
+                        <button class="btn btn-outline-success btn-sm w-100 mt-2" onclick="showWithdrawModal()">
+                            <i class="fas fa-money-bill-wave"></i> Withdraw
+                        </button>
+                        <button class="btn btn-outline-info btn-sm w-100 mt-2" data-bs-toggle="modal" data-bs-target="#updateProfileModal">
+                            <i class="fas fa-user-edit"></i> Update Profile
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-8">
+                    <div class="tournament-card" id="liveTournamentCard">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <h5 class="mt-4 mb-3"><i class="fas fa-calendar-alt"></i> Upcoming Tournaments</h5>
+                    <div class="row" id="upcomingTournaments">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tournaments Section -->
+        <section id="tournamentsSection" class="d-none">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="mb-3"><i class="fas fa-trophy"></i> All Tournaments</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-2">
+                            <select class="form-select form-select-sm" id="tournamentFilter" onchange="filterTournaments()">
+                                <option value="all">All Tournaments</option>
+                                <option value="solo">Solo</option>
+                                <option value="duo">Duo</option>
+                                <option value="squad">Squad</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Search tournaments..." id="searchTournament">
+                                <button class="btn btn-outline-primary" onclick="searchTournaments()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="allTournamentsContainer">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="historySection" class="d-none">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="mb-3"><i class="fas fa-history"></i> Transaction History</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-2">
+                            <select class="form-select form-select-sm" id="transactionTypeFilter" onchange="filterTransactions()">
+                                <option value="all">All Transactions</option>
+                                <option value="recharge">Recharge</option>
+                                <option value="withdrawal">Withdrawal</option>
+                                <option value="tournament">Tournament</option>
+                                <option value="winning">Winnings</option>
+                                <option value="kill">Kill Rewards</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <input type="date" class="form-control form-control-sm" id="transactionDateFilter">
+                        </div>
+                    </div>
+                    <div id="transactionsList">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profileSection" class="d-none">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="balance-card text-center" id="profileCard">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="balance-card">
+                        <h5><i class="fas fa-info-circle"></i> Account Information</h5>
+                        <div id="accountInfo">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                    <div class="balance-card mt-3">
+                        <h5><i class="fas fa-gamepad"></i> Active Tournaments</h5>
+                        <div id="activeTournaments">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6><i class="fas fa-fire"></i> FF Tournament</h6>
+                    <p class="small">Premium Free Fire Tournament Platform</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <h6>Contact Support</h6>
+                    <p class="small"><i class="fas fa-envelope"></i> support@fftournament.com</p>
+                </div>
+            </div>
+            <hr class="bg-light my-2">
+            <p class="text-center small">© 2023 FF Tournament. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <button class="btn btn-success withdraw-btn d-none" id="floatingWithdrawBtn" onclick="showWithdrawModal()">
+        <i class="fas fa-money-bill-wave"></i> Withdraw
+    </button>
+
+    <!-- Modals -->
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="fas fa-sign-in-alt"></i> Login / Register</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="loginTab" role="tablist">
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#login">Login</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#register">Register</button></li>
+                    </ul>
+                    <div class="tab-content mt-3">
+                        <div class="tab-pane fade show active" id="login">
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" id="loginUsername" placeholder="Enter username">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" id="loginPassword" placeholder="Enter password">
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label">Remember me</label>
+                            </div>
+                            <button class="btn btn-ff w-100" onclick="userLogin()">Login</button>
+                        </div>
+                        <div class="tab-pane fade" id="register">
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="regName" placeholder="Enter full name">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" id="regUsername" placeholder="Choose username">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control" id="regPassword" placeholder="Create password">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Free Fire ID</label>
+                                <input type="text" class="form-control" id="regFFID" placeholder="Enter Free Fire ID">
+                            </div>
+                            <button class="btn btn-ff w-100" onclick="registerUser()">Register</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recharge Modal -->
+    <div class="modal fade" id="rechargeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="fas fa-wallet"></i> Recharge Balance</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Amount (৳)</label>
+                        <input type="number" class="form-control" id="rechargeAmount" placeholder="Enter amount" min="100" value="500">
+                        <small class="text-muted">Minimum: ৳100</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" id="paymentMethod" onchange="showPaymentNumber()">
+                            <option value="">Select Payment Method</option>
+                        </select>
+                    </div>
+                    <div class="mb-3" id="paymentNumberInfo" style="display: none;">
+                        <div class="alert alert-info p-2">
+                            <p class="small mb-1"><strong id="selectedMethodName">Method</strong></p>
+                            <p class="mb-1 small">Send money to: <strong id="paymentNumber">XXXXXXXXXX</strong></p>
+                            <p class="mb-0 small">Type: <span id="paymentType">Personal</span></p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Your Transaction ID</label>
+                        <input type="text" class="form-control" id="transactionId" placeholder="Enter transaction ID" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Your Sending Number</label>
+                        <input type="text" class="form-control" id="senderNumber" placeholder="Enter your number" required>
+                    </div>
+                    <button class="btn btn-ff w-100" onclick="submitRechargeRequest()">Submit Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div class="modal fade" id="withdrawModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="fas fa-money-bill-wave"></i> Withdraw Balance</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Amount (৳)</label>
+                        <input type="number" class="form-control" id="withdrawAmount" placeholder="Enter amount" min="200" value="200">
+                        <small class="text-muted" id="minWithdrawalText">Minimum withdrawal: ৳200</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" id="withdrawMethod">
+                            <option value="">Select Payment Method</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Your Account Number</label>
+                        <input type="text" class="form-control" id="withdrawAccountNumber" placeholder="Enter your account number" required>
+                    </div>
+                    <div class="alert alert-warning">
+                        <p class="small mb-0"><i class="fas fa-info-circle"></i> Withdrawal requests are processed manually by admin. You will receive payment within 24 hours.</p>
+                    </div>
+                    <button class="btn btn-success w-100" onclick="submitWithdrawRequest()">Submit Withdrawal Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Profile Modal -->
+    <div class="modal fade" id="updateProfileModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="fas fa-user-edit"></i> Update Profile</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="updateName" placeholder="Enter full name">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Free Fire ID</label>
+                        <input type="text" class="form-control" id="updateFFID" placeholder="Enter Free Fire ID">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="updatePhone" placeholder="Enter phone number">
+                    </div>
+                    <button class="btn btn-ff w-100" onclick="updateProfile()">Update Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Tournament Modal -->
+    <div class="modal fade" id="joinTournamentModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="fas fa-gamepad"></i> Join Tournament</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="tournamentDetails">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Room Modal -->
+    <div class="modal fade" id="viewRoomModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="fas fa-door-open"></i> Room Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="roomDetails">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="successToast" class="toast" role="alert">
+            <div class="toast-header bg-success text-white">
+                <strong class="me-auto"><i class="fas fa-check-circle"></i> Success</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="successToastBody"></div>
+        </div>
+        <div id="errorToast" class="toast" role="alert">
+            <div class="toast-header bg-danger text-white">
+                <strong class="me-auto"><i class="fas fa-exclamation-circle"></i> Error</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body" id="errorToastBody"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
