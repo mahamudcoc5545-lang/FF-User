@@ -276,7 +276,7 @@ function loadAllData() {
 
 // Load Users
 function loadUsers() {
-    database.ref('users').on('value', (snapshot) => {
+    database.ref('users').once('value', (snapshot) => {
         allUsers = [];
         if (snapshot.exists()) {
             snapshot.forEach((child) => {
@@ -291,7 +291,7 @@ function loadUsers() {
 
 // Load Tournaments
 function loadTournaments() {
-    database.ref('tournaments').on('value', (snapshot) => {
+    database.ref('tournaments').once('value', (snapshot) => {
         allTournaments = [];
         if (snapshot.exists()) {
             snapshot.forEach((child) => {
@@ -307,7 +307,7 @@ function loadTournaments() {
 
 // Load Withdrawals
 function loadWithdrawals() {
-    database.ref('withdrawRequests').on('value', (snapshot) => {
+    database.ref('withdrawRequests').once('value', (snapshot) => {
         allWithdrawals = [];
         if (snapshot.exists()) {
             snapshot.forEach((child) => {
@@ -322,7 +322,7 @@ function loadWithdrawals() {
 
 // Load Recharge Requests
 function loadRechargeRequests() {
-    database.ref('rechargeRequests').on('value', (snapshot) => {
+    database.ref('rechargeRequests').once('value', (snapshot) => {
         allRechargeRequests = [];
         if (snapshot.exists()) {
             snapshot.forEach((child) => {
@@ -337,7 +337,7 @@ function loadRechargeRequests() {
 
 // Load Notices
 function loadNotices() {
-    database.ref('notices').on('value', (snapshot) => {
+    database.ref('notices').once('value', (snapshot) => {
         allNotices = [];
         if (snapshot.exists()) {
             snapshot.forEach((child) => {
@@ -352,7 +352,7 @@ function loadNotices() {
 
 // New: Load Messages
 function loadMessages() {
-    database.ref('messages').on('value', (snapshot) => {
+    database.ref('messages').once('value', (snapshot) => {
         allMessages = [];
         if (snapshot.exists()) {
             snapshot.forEach((userSnap) => {
