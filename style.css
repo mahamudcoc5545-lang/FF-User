@@ -9,9 +9,8 @@
     --warning: #ffcc00;
     --danger: #ff3300;
 }
-
 /* ========================
-   LIGHT THEME
+   LIGHT THEME - DARKER TEXT
    ======================== */
 body.light-theme {
     --primary: #ff6600;
@@ -21,7 +20,7 @@ body.light-theme {
     --warning: #ffcc00;
     --danger: #ff3300;
     background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    color: #555; /* হালকা ধূসর টেক্সট */
+    color: #222222 !important;
 }
 
 body.light-theme .header-marquee {
@@ -35,7 +34,7 @@ body.light-theme .main-nav {
 }
 
 body.light-theme .nav-link {
-    color: #333 !important;
+    color: #222222 !important;
 }
 
 body.light-theme .nav-link:hover {
@@ -47,18 +46,18 @@ body.light-theme .tournament-card,
 body.light-theme .login-modal,
 body.light-theme .room-details-box {
     background: rgba(255, 255, 255, 0.95);
-    color: #555;
+    color: #222222 !important;
     border: 1px solid var(--primary);
 }
 
 body.light-theme .form-control {
     background: rgba(0, 0, 0, 0.05);
-    border: 1px solid #ccc;
-    color: #555;
+    border: 1px solid #aaa;
+    color: #222222 !important;
 }
 
 body.light-theme .form-control::placeholder {
-    color: #999;
+    color: #777777 !important;
 }
 
 body.light-theme .form-control:focus {
@@ -67,28 +66,32 @@ body.light-theme .form-control:focus {
     box-shadow: 0 0 0 0.25rem rgba(255, 102, 0, 0.25);
 }
 
-body.light-theme footer {
-    background: #f8f9fa;
-    color: #666;
-    border-top: 2px solid var(--primary);
-}
-
-body.light-theme .toast-header,
-body.light-theme .toast-body {
-    color: #333;
-}
-
 body.light-theme h1, body.light-theme h2, body.light-theme h3,
 body.light-theme h4, body.light-theme h5, body.light-theme h6 {
-    color: #333;
+    color: #111111 !important;
 }
 
 body.light-theme small,
 body.light-theme .text-muted,
-body.light-theme .form-label {
-    color: #888 !important;
+body.light-theme .form-label,
+body.light-theme .player-label {
+    color: #333333 !important;
 }
 
+body.light-theme footer {
+    background: #f8f9fa;
+    color: #222222;
+    border-top: 2px solid var(--primary);
+}
+
+body.light-theme footer .small {
+    color: #444444;
+}
+
+body.light-theme .toast-header,
+body.light-theme .toast-body {
+    color: #222222;
+}
 /* ========================
    DARK THEME (Default) - BRIGHT WHITE TEXT
    ======================== */
@@ -373,4 +376,46 @@ footer .small {
 
 .toast-body {
     color: #ffffff;
+}
+/* ========================
+   THEME TOGGLE BUTTON - GUARANTEED VISIBLE IN BOTH THEMES
+   ======================== */
+.theme-toggle-btn {
+    background: #ffffff !important;           /* সাদা ব্যাকগ্রাউন্ড (দুটো থিমেই) */
+    border: 3px solid #ff6600 !important;      /* মোটা অরেঞ্জ বর্ডার */
+    color: #ff6600 !important;                 /* আইকন অরেঞ্জ */
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    z-index: 9999;
+}
+
+.theme-toggle-btn:hover {
+    background: #ff6600 !important;
+    color: white !important;
+    transform: scale(1.2);
+    box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6) !important;
+}
+
+.theme-toggle-btn i {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Light Theme-এও একই রাখা — কোনো চেঞ্জ না */
+body.light-theme .theme-toggle-btn {
+    background: #ffffff !important;
+    border: 3px solid #ff6600 !important;
+    color: #ff6600 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.light-theme .theme-toggle-btn:hover {
+    background: #ff6600 !important;
+    color: white !important;
 }
