@@ -1,0 +1,421 @@
+/* ========================
+   ROOT VARIABLES
+   ======================== */
+:root {
+    --primary: #ff6600;
+    --secondary: #1a1a2e;
+    --accent: #00ccff;
+    --success: #00ff88;
+    --warning: #ffcc00;
+    --danger: #ff3300;
+}
+/* ========================
+   LIGHT THEME - DARKER TEXT
+   ======================== */
+body.light-theme {
+    --primary: #ff6600;
+    --secondary: #ffffff;
+    --accent: #00ccff;
+    --success: #00ff88;
+    --warning: #ffcc00;
+    --danger: #ff3300;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #222222 !important;
+}
+
+body.light-theme .header-marquee {
+    background: linear-gradient(90deg, var(--primary), var(--danger));
+    color: white;
+}
+
+body.light-theme .main-nav {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-bottom: 2px solid var(--primary);
+}
+
+body.light-theme .nav-link {
+    color: #222222 !important;
+}
+
+body.light-theme .nav-link:hover {
+    color: var(--primary) !important;
+}
+
+body.light-theme .balance-card,
+body.light-theme .tournament-card,
+body.light-theme .login-modal,
+body.light-theme .room-details-box {
+    background: rgba(255, 255, 255, 0.95);
+    color: #222222 !important;
+    border: 1px solid var(--primary);
+}
+
+body.light-theme .form-control {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid #aaa;
+    color: #222222 !important;
+}
+
+body.light-theme .form-control::placeholder {
+    color: #777777 !important;
+}
+
+body.light-theme .form-control:focus {
+    background: white;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(255, 102, 0, 0.25);
+}
+
+body.light-theme h1, body.light-theme h2, body.light-theme h3,
+body.light-theme h4, body.light-theme h5, body.light-theme h6 {
+    color: #111111 !important;
+}
+
+body.light-theme small,
+body.light-theme .text-muted,
+body.light-theme .form-label,
+body.light-theme .player-label {
+    color: #333333 !important;
+}
+
+body.light-theme footer {
+    background: #f8f9fa;
+    color: #222222;
+    border-top: 2px solid var(--primary);
+}
+
+body.light-theme footer .small {
+    color: #444444;
+}
+
+body.light-theme .toast-header,
+body.light-theme .toast-body {
+    color: #222222;
+}
+/* ========================
+   DARK THEME (Default) - BRIGHT WHITE TEXT
+   ======================== */
+body {
+    background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+    color: #ffffff !important; /* সব টেক্সট উজ্জ্বল সাদা */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.header-marquee {
+    background: linear-gradient(90deg, var(--primary), var(--danger));
+    color: white;
+    padding: 8px 0;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.main-nav {
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--primary);
+}
+
+.nav-brand {
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.nav-brand span {
+    color: var(--accent);
+}
+
+.nav-link {
+    color: #ffffff !important;
+    margin: 0 5px;
+    transition: all 0.3s;
+}
+
+.nav-link:hover {
+    color: var(--accent) !important;
+}
+
+.balance-card {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    border: 1px solid var(--primary);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+    box-shadow: 0 5px 15px rgba(255, 102, 0, 0.2);
+    color: #ffffff !important;
+}
+
+.tournament-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 102, 0, 0.3);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+    color: #ffffff !important;
+}
+
+.tournament-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 102, 0, 0.3);
+}
+
+.live-badge {
+    background: linear-gradient(90deg, var(--danger), var(--primary));
+    color: white;
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: bold;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.btn-ff {
+    background: linear-gradient(90deg, var(--primary), var(--danger));
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn-ff:hover {
+    background: linear-gradient(90deg, var(--danger), var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 102, 0, 0.4);
+}
+
+.login-modal {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    border: 2px solid var(--primary);
+    border-radius: 10px;
+    color: #ffffff !important;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff !important;
+    border-radius: 6px;
+}
+
+.form-control::placeholder {
+    color: #dddddd !important;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(255, 102, 0, 0.25);
+    color: white;
+}
+
+.room-details-box {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    border: 2px solid #00ff88;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    margin: 15px 0;
+    color: #ffffff !important;
+}
+
+.room-id {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00ff88;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.room-password {
+    font-size: 20px;
+    color: #ffcc00;
+    font-weight: bold;
+}
+
+.copy-btn {
+    background: linear-gradient(90deg, #00ccff, #0099cc);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.copy-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 204, 255, 0.5);
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+}
+
+.status-pending { background: #ffcc00; color: black; }
+.status-approved { background: #00cc66; }
+.status-rejected { background: #ff3300; }
+.status-live { background: #ff3300; }
+.status-upcoming { background: #00a8ff; }
+.status-completed { background: #00cc66; }
+
+.user-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary);
+}
+
+.loading-spinner {
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top: 3px solid var(--primary);
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.withdraw-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    border-radius: 50px;
+    padding: 10px 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Rainbow Glitter Button */
+.rainbow-glitter-button {
+    background-color: #FF8C00;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    animation: changeColor 5s infinite;
+}
+
+@keyframes changeColor {
+    0% { background-color: #FF8C00; }
+    20% { background-color: #FF4500; }
+    40% { background-color: #9400D3; }
+    60% { background-color: #007BFF; }
+    80% { background-color: #28A745; }
+    100% { background-color: #FF8C00; }
+}
+
+.rainbow-glitter-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 20%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: rotate(30deg);
+    animation: glitter 2.5s infinite;
+}
+
+@keyframes glitter {
+    0% { left: -60%; }
+    30% { left: 120%; }
+    100% { left: 120%; }
+}
+
+.rainbow-glitter-button:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* Dark Theme - All Text Bright White */
+small,
+.text-muted,
+.form-label,
+.player-label,
+.modal-body .small {
+    color: #ffffff !important;
+}
+
+footer {
+    background: var(--secondary);
+    color: #ffffff;
+    border-top: 2px solid var(--primary);
+}
+
+footer .small {
+    color: #eeeeee;
+}
+
+.toast-body {
+    color: #ffffff;
+}
+/* ========================
+   THEME TOGGLE BUTTON - GUARANTEED VISIBLE IN BOTH THEMES
+   ======================== */
+.theme-toggle-btn {
+    background: #ffffff !important;           /* সাদা ব্যাকগ্রাউন্ড (দুটো থিমেই) */
+    border: 3px solid #ff6600 !important;      /* মোটা অরেঞ্জ বর্ডার */
+    color: #ff6600 !important;                 /* আইকন অরেঞ্জ */
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+    z-index: 9999;
+}
+
+.theme-toggle-btn:hover {
+    background: #ff6600 !important;
+    color: white !important;
+    transform: scale(1.2);
+    box-shadow: 0 6px 20px rgba(255, 102, 0, 0.6) !important;
+}
+
+.theme-toggle-btn i {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Light Theme-এও একই রাখা — কোনো চেঞ্জ না */
+body.light-theme .theme-toggle-btn {
+    background: #ffffff !important;
+    border: 3px solid #ff6600 !important;
+    color: #ff6600 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.light-theme .theme-toggle-btn:hover {
+    background: #ff6600 !important;
+    color: white !important;
+}
