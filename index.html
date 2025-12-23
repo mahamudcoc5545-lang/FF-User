@@ -299,24 +299,6 @@
             }
         }
     </style>
-    
-    <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCN_MH6u2Bpo3bxfDC_dhC19U67LP8ZS_E",
-            authDomain: "free-fire-22cac.firebaseapp.com",
-            databaseURL: "https://free-fire-22cac-default-rtdb.firebaseio.com",
-            projectId: "free-fire-22cac",
-            storageBucket: "free-fire-22cac.firebasestorage.app",
-            messagingSenderId: "554987602894",
-            appId: "1:554987602894:web:51548645a15c0d1e8d619f",
-            measurementId: "G-W2QYY1CQ8D"
-        };
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-    </script>
 </head>
 <body>
     <!-- Header Notice Marquee -->
@@ -325,68 +307,7 @@
             🎮 Welcome to FF Tournament Platform! Join Free Fire Tournaments & Win Cash Prizes!
         </marquee>
     </div>
-<div><style>
-  .rainbow-glitter-button {
-    /* Initial color */
-    background-color: #FF8C00; 
-    color: white;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    position: relative;
-    overflow: hidden;
-    
-    /* Apply both the color change and the glitter animation */
-    animation: changeColor 5s infinite;
-  }
 
-  /* Animation for changing colors every second */
-  @keyframes changeColor {
-    0%   { background-color: #FF8C00; } /* Orange */
-    20%  { background-color: #FF4500; } /* Orange-Red */
-    40%  { background-color: #9400D3; } /* Dark Violet */
-    60%  { background-color: #007BFF; } /* Blue */
-    80%  { background-color: #28A745; } /* Green */
-    100% { background-color: #FF8C00; } /* Back to Orange */
-  }
-
-  /* The Glitter Shine Effect */
-  .rainbow-glitter-button::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -60%;
-    width: 20%;
-    height: 200%;
-    background: rgba(255, 255, 255, 0.5);
-    transform: rotate(30deg);
-    animation: glitter 2.5s infinite;
-  }
-
-  @keyframes glitter {
-    0% { left: -60%; }
-    30% { left: 120%; }
-    100% { left: 120%; }
-  }
-
-  /* Interactive hover effect */
-  .rainbow-glitter-button:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-  }
-</style>
-
-<a href="https://drive.google.com/file/d/1f_5I9wwnEBq_577NLcp-RCRvs67GcgYH/view?usp=drivesdk" 
-   class="rainbow-glitter-button" 
-   target="_blank">
-  Download the app
-</a>
-</div>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg main-nav sticky-top">
         <div class="container">
@@ -418,6 +339,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="showSection('profile')">
                             <i class="fas fa-user"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="rules.html">
+                            <i class="fas fa-book"></i> Rules
                         </a>
                     </li>
                 </ul>
@@ -587,7 +513,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-2">
-                            <input type="date" class="form-control form-control-sm" id="transactionDateFilter">
+                            <input type="date" class="form-control form-control-sm" id="transactionDateFilter" onchange="filterTransactions()">
                         </div>
                     </div>
                     
@@ -605,6 +531,18 @@
                     <div class="balance-card text-center" id="profileCard">
                         <div class="loading-spinner"></div>
                     </div>
+                    
+                    <!-- Rules Board -->
+                    <div class="rules-board mt-3">
+                        <h4>Rules of Play</h4>
+                        <ul>
+                            <li>No cheating or hacking allowed.</li>
+                            <li>Report kills accurately after match.</li>
+                            <li>Admin decision is final.</li>
+                            <li>Respect all players.</li>
+                        </ul>
+                        <button class="btn btn-ff btn-sm w-100" data-bs-toggle="modal" data-bs-target="#rulesModal">View Full Rules</button>
+                    </div>
                 </div>
                 
                 <div class="col-md-8">
@@ -615,10 +553,22 @@
                         </div>
                     </div>
                     
-                    <!-- Joined Tournaments -->
+                    <!-- Active Tournaments -->
                     <div class="balance-card mt-3">
                         <h5><i class="fas fa-gamepad"></i> Active Tournaments</h5>
                         <div id="activeTournaments">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Contact Admin Section -->
+                    <div class="balance-card mt-3">
+                        <h5><i class="fas fa-envelope"></i> Contact Admin</h5>
+                        <textarea class="form-control mb-2" id="contactMessage" rows="3" placeholder="Enter your message..."></textarea>
+                        <button class="btn btn-ff btn-sm" onclick="sendMessageToAdmin()">Send Message</button>
+                        
+                        <h6 class="mt-3">Message History</h6>
+                        <div id="messagesContainer">
                             <div class="loading-spinner"></div>
                         </div>
                     </div>
@@ -759,48 +709,46 @@
     </div>
 
     <!-- Withdraw Modal -->
- <!-- Withdraw Modal -->
-<div class="modal fade" id="withdrawModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content login-modal">
-            <div class="modal-header border-0">
-                <h5 class="modal-title"><i class="fas fa-money-bill-wave"></i> Withdraw Balance</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label">Amount (৳)</label>
-                    <input type="number" class="form-control" id="withdrawAmount" placeholder="Enter amount" min="200" value="200">
-                    <small class="text-muted" id="minWithdrawalText">Minimum withdrawal: ৳200</small>
+    <div class="modal fade" id="withdrawModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="fas fa-money-bill-wave"></i> Withdraw Balance</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Payment Method</label>
-                    <select class="form-select" id="withdrawMethod" >
-                        <option value="">Select Payment Method</option>
-                        <option value="bkash">bKash</option>
-                        <option value="nagad">Nagad</option>
-                        <option value="rocket">Rocket (DBBL)</option>
-                        <option value="upay">Upay</option>
-                    </select>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Amount (৳)</label>
+                        <input type="number" class="form-control" id="withdrawAmount" placeholder="Enter amount" min="200" value="200">
+                        <small class="text-muted" id="minWithdrawalText">Minimum withdrawal: ৳200</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select class="form-select" id="withdrawMethod">
+                            <option value="">Select Payment Method</option>
+                            <option value="bkash">bKash</option>
+                            <option value="nagad">Nagad</option>
+                            <option value="rocket">Rocket (DBBL)</option>
+                            <option value="upay">Upay</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Your Account Number</label>
+                        <input type="text" class="form-control" id="withdrawAccountNumber" placeholder="Enter your account number" required>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <p class="small mb-0"><i class="fas fa-info-circle"></i> 
+                            Withdrawal requests are processed manually by admin. You will receive payment within 24 hours.
+                        </p>
+                    </div>
+                    
+                    <button class="btn btn-success w-100" onclick="submitWithdrawRequest()">Submit Withdrawal Request</button>
                 </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Your Account Number</label>
-                    <input type="text" class="form-control" id="withdrawAccountNumber" placeholder="Enter your account number" required>
-                </div>
-                
-                <div class="alert alert-warning">
-                    <p class="small mb-0"><i class="fas fa-info-circle"></i> 
-                        Withdrawal requests are processed manually by admin. You will receive payment within 24 hours.
-                    </p>
-                  
-                </div>
-                
-                <button class="btn btn-success w-100" onclick="submitWithdrawRequest()">Submit Withdrawal Request</button>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Update Profile Modal -->
@@ -855,6 +803,26 @@
                 </div>
                 <div class="modal-body" id="roomDetails">
                     <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rules Modal -->
+    <div class="modal fade" id="rulesModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content login-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title"><i class="fas fa-book"></i> Full Rules</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>1. No cheating or hacking allowed. Violators will be banned.</p>
+                    <p>2. Report kills accurately after the match ends.</p>
+                    <p>3. Admin's decision is final in all matters.</p>
+                    <p>4. Respect all players and maintain fair play.</p>
+                    <p>5. Withdrawals processed within 24 hours.</p>
+                    <a href="rules.html" class="btn btn-ff w-100 mt-2">View Detailed Rules Page</a>
                 </div>
             </div>
         </div>
@@ -2375,5 +2343,6 @@
     <script src="script.js"></script>
     <script src="withdraw.js"></script>
     <script src="tournament-scheduler.js"></script>
+    <script src="firebase-config.js"></script>
 </body>
 </html>
